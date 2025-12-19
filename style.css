@@ -12,6 +12,43 @@ body {
     min-height: 100vh;
 }
 
+/* Support Bar */
+.support-bar {
+    background: linear-gradient(135deg, #4a69bd 0%, #6a89cc 100%);
+    padding: 8px 20px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 15px;
+    flex-wrap: wrap;
+}
+
+.support-bar span {
+    color: #fff;
+    font-size: 0.9rem;
+    font-weight: 500;
+}
+
+.support-bar .support-link {
+    display: inline-flex;
+    align-items: center;
+    transition: transform 0.2s ease;
+}
+
+.support-bar .support-link:hover {
+    transform: scale(1.05);
+}
+
+.support-bar .support-link img {
+    height: 28px;
+}
+
+@media print {
+    .support-bar {
+        display: none !important;
+    }
+}
+
 /* App Container */
 .app-container {
     max-width: 1600px;
