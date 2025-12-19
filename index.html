@@ -1,0 +1,193 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Fortune Teller Maker - Create Custom Origami Fortune Tellers</title>
+
+    <!-- SEO Meta Tags -->
+    <meta name="description" content="Create custom origami fortune tellers from your photos. Free online tool - upload images, select faces, and print your own paper fortune teller (cootie catcher).">
+    <meta name="keywords" content="fortune teller, cootie catcher, origami, paper craft, free tool, printable, DIY">
+    <meta name="author" content="Fortune Teller Maker">
+
+    <!-- Open Graph / Facebook -->
+    <meta property="og:type" content="website">
+    <meta property="og:title" content="Fortune Teller Maker - Create Custom Origami Fortune Tellers">
+    <meta property="og:description" content="Upload photos, select regions, and create printable origami fortune tellers for free. No signup required!">
+    <meta property="og:image" content="preview.png">
+
+    <!-- Twitter -->
+    <meta name="twitter:card" content="summary_large_image">
+    <meta name="twitter:title" content="Fortune Teller Maker">
+    <meta name="twitter:description" content="Create custom origami fortune tellers from your photos. Free online tool!">
+    <meta name="twitter:image" content="preview.png">
+
+    <link rel="stylesheet" href="style.css">
+</head>
+<body>
+    <!-- Header Ad Banner -->
+    <div class="ad-banner ad-header">
+        <div class="ad-placeholder">Advertisement</div>
+    </div>
+
+    <div class="app-container">
+        <header>
+            <h1>Fortune Teller Maker</h1>
+            <p class="subtitle">Create custom origami fortune tellers from your images</p>
+        </header>
+
+        <main>
+            <!-- Left Panel: Source Image & Selection -->
+            <section class="source-panel">
+                <div class="panel-header">
+                    <h2>Source Image</h2>
+                    <div class="upload-controls">
+                        <input type="file" id="imageInput" accept="image/*" multiple>
+                        <label for="imageInput" class="btn btn-primary">Upload Images</label>
+                    </div>
+                </div>
+
+                <div class="canvas-container" id="sourceContainer">
+                    <div class="drop-zone" id="dropZone">
+                        <p>Drag & drop images here<br>or click Upload Images</p>
+                    </div>
+                    <canvas id="sourceCanvas"></canvas>
+                    <canvas id="selectionCanvas"></canvas>
+                </div>
+
+                <div class="selection-controls">
+                    <button id="newSelectionBtn" class="btn btn-secondary" disabled>New Selection</button>
+                    <button id="finishSelectionBtn" class="btn btn-secondary" disabled>Finish Selection</button>
+                    <button id="cancelSelectionBtn" class="btn btn-danger" disabled>Cancel</button>
+                    <button id="autoSegmentBtn" class="btn btn-primary" disabled>Auto Segment</button>
+                </div>
+
+                <div class="segment-options" id="segmentOptions" style="display: none;">
+                    <label>
+                        Background Type:
+                        <select id="bgTypeSelect">
+                            <option value="white">White/Light</option>
+                            <option value="black">Black/Dark</option>
+                            <option value="transparent">Transparent</option>
+                            <option value="grid">Grid Pattern</option>
+                            <option value="custom">Custom Color</option>
+                        </select>
+                    </label>
+                    <label>
+                        Threshold:
+                        <input type="range" id="thresholdSlider" min="0" max="255" value="240">
+                        <span id="thresholdValue">240</span>
+                    </label>
+                    <label id="customColorLabel" style="display: none;">
+                        Color:
+                        <input type="color" id="customColorPicker" value="#ffffff">
+                    </label>
+                    <label id="gridSizeLabel" style="display: none;">
+                        Grid Size:
+                        <input type="number" id="gridSizeInput" min="2" max="10" value="4" style="width: 50px;">
+                    </label>
+                    <label>
+                        Min Size:
+                        <input type="range" id="minSizeSlider" min="500" max="10000" value="2000" step="500">
+                        <span id="minSizeValue">2000</span>px
+                    </label>
+                    <button id="runSegmentBtn" class="btn btn-primary">Find Regions</button>
+                    <button id="cancelSegmentBtn" class="btn btn-secondary">Cancel</button>
+                </div>
+
+                <div class="instructions" id="selectionInstructions">
+                    <p>Click "New Selection" to start drawing a polygon region</p>
+                </div>
+
+                <!-- Image Thumbnails -->
+                <div class="image-list" id="imageList">
+                    <h3>Loaded Images</h3>
+                    <div class="thumbnails" id="thumbnails"></div>
+                </div>
+
+                <!-- Selections List -->
+                <div class="selections-panel">
+                    <h3>Saved Selections <span class="drag-hint">(drag to template)</span></h3>
+                    <div class="selections-list" id="selectionsList"></div>
+                </div>
+            </section>
+
+            <!-- Right Panel: Fortune Teller Template -->
+            <section class="template-panel">
+                <div class="panel-header">
+                    <h2>Fortune Teller Template</h2>
+                    <div class="mode-selector">
+                        <label for="modeSelect">Template Mode:</label>
+                        <select id="modeSelect">
+                            <option value="both">All Sections (Corners + Numbers + Fortunes)</option>
+                            <option value="outer">Outer Only (Corners + Numbers)</option>
+                            <option value="inner">Inner Only (Fortunes)</option>
+                            <option value="corners">Corners Only (4 squares)</option>
+                            <option value="numbers">Classic (Colors + Numbers + Fortunes)</option>
+                        </select>
+                    </div>
+                </div>
+
+                <div class="template-container">
+                    <canvas id="templateCanvas"></canvas>
+                </div>
+
+                <!-- Assignment Panel -->
+                <div class="assignment-panel" id="assignmentPanel">
+                    <div class="assignment-header">
+                        <h3>Assign Images to Sections</h3>
+                        <button id="quickFillBtn" class="btn btn-secondary" title="Auto-assign selections to sections in order">Quick Fill</button>
+                    </div>
+                    <p class="assignment-hint">Click a slot below or drag selections onto the template</p>
+                    <div class="visual-assignment-grid" id="assignmentGrid">
+                        <!-- Populated dynamically with visual slots -->
+                    </div>
+                </div>
+
+                <!-- Selection Picker Modal -->
+                <div class="selection-picker" id="selectionPicker" style="display: none;">
+                    <div class="picker-content">
+                        <div class="picker-header">
+                            <span id="pickerTitle">Select an image</span>
+                            <button class="picker-close" id="pickerClose">&times;</button>
+                        </div>
+                        <div class="picker-grid" id="pickerGrid"></div>
+                        <button class="btn btn-danger picker-clear" id="pickerClear">Clear Assignment</button>
+                    </div>
+                </div>
+
+                <div class="action-buttons">
+                    <button id="printBtn" class="btn btn-primary">Print Template</button>
+                    <button id="downloadBtn" class="btn btn-secondary">Download as PNG</button>
+                    <button id="clearAllBtn" class="btn btn-danger">Clear All</button>
+                </div>
+            </section>
+        </main>
+    </div>
+
+    <!-- Footer -->
+    <footer class="app-footer">
+        <div class="footer-content">
+            <p>Fortune Teller Maker &copy; 2025</p>
+            <div class="footer-links">
+                <a href="https://ko-fi.com/YOUR_KOFI_USERNAME" target="_blank" rel="noopener" class="tip-link">
+                    <img src="https://storage.ko-fi.com/cdn/kofi2.png?v=3" alt="Support on Ko-fi" height="32">
+                </a>
+                <a href="privacy.html" class="privacy-link">Privacy Policy</a>
+            </div>
+        </div>
+        <div class="ad-banner ad-footer">
+            <div class="ad-placeholder">Advertisement</div>
+        </div>
+    </footer>
+
+    <!-- Print-only template -->
+    <div class="print-only" id="printTemplate">
+        <canvas id="printCanvas"></canvas>
+    </div>
+
+    <script src="selection.js"></script>
+    <script src="template.js"></script>
+    <script src="app.js"></script>
+</body>
+</html>

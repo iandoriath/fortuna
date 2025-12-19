@@ -1,0 +1,907 @@
+/* Reset and Base Styles */
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+}
+
+body {
+    font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, sans-serif;
+    background: #1a1a2e;
+    color: #eee;
+    min-height: 100vh;
+}
+
+/* App Container */
+.app-container {
+    max-width: 1600px;
+    margin: 0 auto;
+    padding: 20px;
+}
+
+/* Header */
+header {
+    text-align: center;
+    margin-bottom: 30px;
+}
+
+header h1 {
+    font-size: 2.5rem;
+    color: #fff;
+    margin-bottom: 8px;
+}
+
+.subtitle {
+    color: #888;
+    font-size: 1.1rem;
+}
+
+/* Main Layout */
+main {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 30px;
+}
+
+/* Panels */
+.source-panel,
+.template-panel {
+    background: #16213e;
+    border-radius: 12px;
+    padding: 20px;
+}
+
+.panel-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 20px;
+    flex-wrap: wrap;
+    gap: 10px;
+}
+
+.panel-header h2 {
+    font-size: 1.4rem;
+    color: #fff;
+}
+
+/* Buttons */
+.btn {
+    padding: 10px 20px;
+    border: none;
+    border-radius: 6px;
+    cursor: pointer;
+    font-size: 0.95rem;
+    font-weight: 500;
+    transition: all 0.2s ease;
+}
+
+.btn:disabled {
+    opacity: 0.5;
+    cursor: not-allowed;
+}
+
+.btn-primary {
+    background: #4a69bd;
+    color: white;
+}
+
+.btn-primary:hover:not(:disabled) {
+    background: #5a7de8;
+}
+
+.btn-secondary {
+    background: #2d3a5a;
+    color: #ddd;
+}
+
+.btn-secondary:hover:not(:disabled) {
+    background: #3d4a6a;
+}
+
+.btn-danger {
+    background: #c0392b;
+    color: white;
+}
+
+.btn-danger:hover:not(:disabled) {
+    background: #e74c3c;
+}
+
+/* Upload Controls */
+.upload-controls input[type="file"] {
+    display: none;
+}
+
+/* Canvas Container */
+.canvas-container {
+    position: relative;
+    background: #0f0f23;
+    border-radius: 8px;
+    min-height: 400px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    overflow: hidden;
+}
+
+.canvas-container canvas {
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+}
+
+#selectionCanvas {
+    cursor: crosshair;
+    z-index: 10;
+}
+
+/* Drop Zone */
+.drop-zone {
+    position: absolute;
+    inset: 0;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    border: 3px dashed #3a3a5a;
+    border-radius: 8px;
+    z-index: 5;
+    transition: all 0.3s ease;
+}
+
+.drop-zone p {
+    color: #666;
+    text-align: center;
+    font-size: 1.1rem;
+}
+
+.drop-zone.hidden {
+    display: none;
+}
+
+.drop-zone.drag-over {
+    border-color: #4a69bd;
+    background: rgba(74, 105, 189, 0.1);
+}
+
+/* Selection Controls */
+.selection-controls {
+    display: flex;
+    gap: 10px;
+    margin-top: 15px;
+    flex-wrap: wrap;
+}
+
+/* Segment Options */
+.segment-options {
+    margin-top: 15px;
+    padding: 15px;
+    background: #0f0f23;
+    border-radius: 8px;
+    display: flex;
+    flex-wrap: wrap;
+    gap: 15px;
+    align-items: center;
+}
+
+.segment-options label {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    color: #aaa;
+    font-size: 0.9rem;
+}
+
+.segment-options input[type="range"] {
+    width: 100px;
+    cursor: pointer;
+}
+
+.segment-options span {
+    color: #fff;
+    min-width: 40px;
+}
+
+.segment-options select {
+    background: #1a1a2e;
+    color: #fff;
+    border: 1px solid #333;
+    border-radius: 4px;
+    padding: 5px 10px;
+    font-size: 0.9rem;
+    cursor: pointer;
+}
+
+.segment-options select:hover {
+    border-color: #4a69bd;
+}
+
+.segment-options input[type="color"] {
+    width: 40px;
+    height: 30px;
+    border: none;
+    border-radius: 4px;
+    cursor: pointer;
+    background: transparent;
+}
+
+.segment-options input[type="number"] {
+    background: #1a1a2e;
+    color: #fff;
+    border: 1px solid #333;
+    border-radius: 4px;
+    padding: 5px 8px;
+    font-size: 0.9rem;
+    width: 60px;
+}
+
+.segment-options input[type="number"]:focus {
+    outline: none;
+    border-color: #4a69bd;
+}
+
+.instructions {
+    margin-top: 10px;
+    padding: 10px;
+    background: #0f0f23;
+    border-radius: 6px;
+    color: #888;
+    font-size: 0.9rem;
+}
+
+/* Image List */
+.image-list {
+    margin-top: 20px;
+}
+
+.image-list h3 {
+    font-size: 1rem;
+    margin-bottom: 10px;
+    color: #aaa;
+}
+
+.thumbnails {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 10px;
+}
+
+.thumbnail {
+    width: 80px;
+    height: 80px;
+    border-radius: 6px;
+    overflow: hidden;
+    cursor: pointer;
+    border: 3px solid transparent;
+    transition: border-color 0.2s ease;
+}
+
+.thumbnail:hover {
+    border-color: #4a69bd;
+}
+
+.thumbnail.active {
+    border-color: #4a69bd;
+}
+
+.thumbnail img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+}
+
+/* Selections Panel */
+.selections-panel {
+    margin-top: 20px;
+}
+
+.selections-panel h3 {
+    font-size: 1rem;
+    margin-bottom: 10px;
+    color: #aaa;
+}
+
+.selections-list {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(70px, 1fr));
+    gap: 8px;
+    max-height: 180px;
+    overflow-y: auto;
+    padding: 5px;
+}
+
+.selection-item {
+    position: relative;
+    width: 100%;
+    aspect-ratio: 1;
+    background: #0f0f23;
+    border-radius: 6px;
+    border: 2px solid transparent;
+    overflow: hidden;
+    padding: 0;
+}
+
+.selection-item:hover {
+    border-color: #4a69bd;
+}
+
+.selection-item.active {
+    border-color: #4a69bd;
+}
+
+.selection-item.dragging {
+    opacity: 0.4;
+    transform: scale(0.95);
+}
+
+.selection-preview {
+    width: 100%;
+    height: 100%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.selection-preview canvas {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+}
+
+.selection-info {
+    position: absolute;
+    bottom: 0;
+    left: 0;
+    right: 0;
+    background: rgba(0, 0, 0, 0.7);
+    padding: 2px 4px;
+    display: none;
+}
+
+.selection-item:hover .selection-info {
+    display: block;
+}
+
+.selection-name {
+    font-size: 0.65rem;
+    font-weight: 500;
+    color: #fff;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+    background: transparent;
+    border: none;
+    width: 100%;
+    padding: 0;
+    margin: 0;
+}
+
+.selection-source {
+    display: none;
+}
+
+.selection-actions {
+    position: absolute;
+    top: 2px;
+    right: 2px;
+    opacity: 0;
+    transition: opacity 0.2s;
+}
+
+.selection-item:hover .selection-actions {
+    opacity: 1;
+}
+
+.selection-actions button {
+    padding: 2px 6px;
+    font-size: 0.65rem;
+    border-radius: 3px;
+}
+
+/* Template Panel */
+.template-container {
+    background: white;
+    border-radius: 8px;
+    padding: 20px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    min-height: 500px;
+}
+
+#templateCanvas {
+    max-width: 100%;
+    max-height: 100%;
+}
+
+/* Mode Selector */
+.mode-selector {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+}
+
+.mode-selector label {
+    color: #aaa;
+    font-size: 0.9rem;
+}
+
+.mode-selector select {
+    padding: 8px 12px;
+    border-radius: 6px;
+    background: #0f0f23;
+    color: #fff;
+    border: 1px solid #3a3a5a;
+    font-size: 0.9rem;
+    cursor: pointer;
+}
+
+/* Assignment Panel */
+.assignment-panel {
+    margin-top: 20px;
+}
+
+.assignment-panel h3 {
+    font-size: 1rem;
+    margin-bottom: 15px;
+    color: #aaa;
+}
+
+.assignment-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
+    gap: 10px;
+    max-height: 250px;
+    overflow-y: auto;
+}
+
+.assignment-row {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    padding: 8px;
+    background: #0f0f23;
+    border-radius: 6px;
+}
+
+.assignment-label {
+    flex: 1;
+    font-size: 0.9rem;
+    color: #ddd;
+}
+
+.assignment-select {
+    padding: 6px 10px;
+    border-radius: 4px;
+    background: #2d3a5a;
+    color: #fff;
+    border: 1px solid #3a3a5a;
+    font-size: 0.85rem;
+    min-width: 100px;
+}
+
+/* Action Buttons */
+.action-buttons {
+    display: flex;
+    gap: 10px;
+    margin-top: 20px;
+    justify-content: center;
+}
+
+/* Print Styles */
+.print-only {
+    display: none;
+}
+
+@media print {
+    /* Hide everything in the app */
+    body {
+        background: white !important;
+        margin: 0 !important;
+        padding: 0 !important;
+    }
+
+    .app-container,
+    .ad-banner,
+    .app-footer,
+    .selection-picker {
+        display: none !important;
+    }
+
+    /* Show only the print template */
+    .print-only {
+        display: block !important;
+        position: absolute;
+        top: 0;
+        left: 0;
+        width: 100%;
+        background: white;
+    }
+
+    #printCanvas {
+        display: block;
+        width: 100%;
+        height: auto;
+        max-width: 100%;
+        page-break-after: avoid;
+        page-break-inside: avoid;
+    }
+
+    /* Prevent extra pages */
+    @page {
+        margin: 0.5in;
+        size: letter;
+    }
+}
+
+/* Responsive */
+@media (max-width: 1200px) {
+    main {
+        grid-template-columns: 1fr;
+    }
+
+    .canvas-container {
+        min-height: 350px;
+    }
+}
+
+/* Scrollbar Styling */
+::-webkit-scrollbar {
+    width: 8px;
+    height: 8px;
+}
+
+::-webkit-scrollbar-track {
+    background: #0f0f23;
+    border-radius: 4px;
+}
+
+::-webkit-scrollbar-thumb {
+    background: #3a3a5a;
+    border-radius: 4px;
+}
+
+::-webkit-scrollbar-thumb:hover {
+    background: #4a4a6a;
+}
+
+/* ==================== */
+/* Ad Banners */
+/* ==================== */
+.ad-banner {
+    background: #0f0f23;
+    text-align: center;
+    padding: 15px;
+}
+
+.ad-header {
+    border-bottom: 1px solid #2d3a5a;
+}
+
+.ad-footer {
+    border-top: 1px solid #2d3a5a;
+    margin-top: 10px;
+}
+
+.ad-placeholder {
+    color: #555;
+    font-size: 0.85rem;
+    padding: 20px;
+    border: 1px dashed #3a3a5a;
+    border-radius: 4px;
+    max-width: 728px;
+    margin: 0 auto;
+}
+
+/* ==================== */
+/* Footer */
+/* ==================== */
+.app-footer {
+    background: #0f0f23;
+    padding: 20px;
+    text-align: center;
+    margin-top: 30px;
+}
+
+.footer-content p {
+    color: #666;
+    font-size: 0.9rem;
+    margin-bottom: 15px;
+}
+
+.footer-links {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 20px;
+    margin-bottom: 15px;
+    flex-wrap: wrap;
+}
+
+.tip-link {
+    display: inline-flex;
+    align-items: center;
+    transition: transform 0.2s ease;
+}
+
+.tip-link:hover {
+    transform: scale(1.05);
+}
+
+.tip-link img {
+    height: 32px;
+}
+
+.privacy-link {
+    color: #666;
+    text-decoration: none;
+    font-size: 0.85rem;
+}
+
+.privacy-link:hover {
+    color: #4a69bd;
+}
+
+/* ==================== */
+/* Drag and Drop */
+/* ==================== */
+.drag-hint {
+    font-size: 0.8rem;
+    color: #666;
+    font-weight: normal;
+}
+
+.selection-item {
+    cursor: grab;
+    transition: all 0.2s ease;
+}
+
+.selection-item:active {
+    cursor: grabbing;
+}
+
+.selection-item.dragging {
+    opacity: 0.4;
+    transform: scale(0.95);
+}
+
+.template-container.drag-over {
+    box-shadow: inset 0 0 20px rgba(74, 105, 189, 0.5);
+}
+
+#templateCanvas {
+    transition: filter 0.2s ease;
+}
+
+#templateCanvas.drag-active {
+    cursor: copy;
+}
+
+/* ==================== */
+/* Visual Assignment Grid */
+/* ==================== */
+.assignment-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 10px;
+}
+
+.assignment-header h3 {
+    font-size: 1rem;
+    color: #aaa;
+    margin: 0;
+}
+
+.assignment-hint {
+    color: #666;
+    font-size: 0.85rem;
+    margin-bottom: 15px;
+}
+
+.visual-assignment-grid {
+    display: grid;
+    grid-template-columns: repeat(4, 1fr);
+    gap: 10px;
+    max-height: 300px;
+    overflow-y: auto;
+    padding: 5px;
+}
+
+.assignment-slot {
+    background: #0f0f23;
+    border: 2px dashed #3a3a5a;
+    border-radius: 8px;
+    padding: 8px;
+    text-align: center;
+    cursor: pointer;
+    transition: all 0.2s ease;
+    min-height: 80px;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+}
+
+.assignment-slot:hover {
+    border-color: #4a69bd;
+    background: #1a1a3e;
+}
+
+.assignment-slot.assigned {
+    border-style: solid;
+    border-color: #4a69bd;
+}
+
+.assignment-slot.drag-over {
+    border-color: #5a7de8;
+    background: rgba(74, 105, 189, 0.2);
+    transform: scale(1.02);
+}
+
+.assignment-slot .slot-label {
+    font-size: 0.85rem;
+    color: #888;
+    margin-bottom: 5px;
+}
+
+.assignment-slot .slot-thumbnail {
+    width: 50px;
+    height: 50px;
+    border-radius: 4px;
+    overflow: hidden;
+    background: #2d3a5a;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.assignment-slot .slot-thumbnail canvas {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+}
+
+.assignment-slot .slot-thumbnail.empty {
+    color: #555;
+    font-size: 1.5rem;
+}
+
+.assignment-slot .slot-thumbnail.empty::after {
+    content: "+";
+}
+
+/* Section type labels */
+.section-group-label {
+    grid-column: 1 / -1;
+    font-size: 0.8rem;
+    color: #666;
+    text-transform: uppercase;
+    letter-spacing: 1px;
+    padding: 5px 0;
+    border-bottom: 1px solid #2d3a5a;
+    margin-top: 10px;
+}
+
+.section-group-label:first-child {
+    margin-top: 0;
+}
+
+/* ==================== */
+/* Selection Picker Modal */
+/* ==================== */
+.selection-picker {
+    position: fixed;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    background: rgba(0, 0, 0, 0.7);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    z-index: 1000;
+}
+
+.picker-content {
+    background: #16213e;
+    border-radius: 12px;
+    padding: 20px;
+    max-width: 400px;
+    width: 90%;
+    max-height: 80vh;
+    overflow-y: auto;
+}
+
+.picker-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 15px;
+    padding-bottom: 10px;
+    border-bottom: 1px solid #3a3a5a;
+}
+
+.picker-header span {
+    font-size: 1.1rem;
+    color: #fff;
+}
+
+.picker-close {
+    background: none;
+    border: none;
+    color: #888;
+    font-size: 1.5rem;
+    cursor: pointer;
+    padding: 0 5px;
+    line-height: 1;
+}
+
+.picker-close:hover {
+    color: #fff;
+}
+
+.picker-grid {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 10px;
+    margin-bottom: 15px;
+}
+
+.picker-item {
+    background: #0f0f23;
+    border: 2px solid transparent;
+    border-radius: 8px;
+    padding: 10px;
+    cursor: pointer;
+    transition: all 0.2s ease;
+    text-align: center;
+}
+
+.picker-item:hover {
+    border-color: #4a69bd;
+    background: #1a1a3e;
+}
+
+.picker-item canvas {
+    width: 60px;
+    height: 60px;
+    border-radius: 4px;
+}
+
+.picker-item .picker-item-name {
+    font-size: 0.75rem;
+    color: #aaa;
+    margin-top: 5px;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+}
+
+.picker-clear {
+    width: 100%;
+}
+
+.picker-empty {
+    grid-column: 1 / -1;
+    text-align: center;
+    color: #666;
+    padding: 20px;
+}
+
+/* ==================== */
+/* Template Highlighting */
+/* ==================== */
+.template-container {
+    position: relative;
+}
+
+.template-highlight-overlay {
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    pointer-events: none;
+}
