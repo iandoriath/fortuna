@@ -253,6 +253,9 @@ class FortuneTellerApp {
                 const item = document.createElement('div');
                 item.className = 'picker-item';
 
+                const canvasContainer = document.createElement('div');
+                canvasContainer.className = 'picker-canvas-container';
+
                 const canvas = document.createElement('canvas');
                 canvas.width = 60;
                 canvas.height = 60;
@@ -264,14 +267,34 @@ class FortuneTellerApp {
                 const h = sel.canvas.height * scale;
                 ctx.drawImage(sel.canvas, (60 - w) / 2, (60 - h) / 2, w, h);
 
+                const rotateBtn = document.createElement('button');
+                rotateBtn.className = 'picker-rotate-btn';
+                rotateBtn.textContent = '↻';
+                rotateBtn.title = 'Rotate 90°';
+                rotateBtn.addEventListener('click', (e) => {
+                    e.stopPropagation();
+                    this.rotateSelection(sel.id, 90);
+                    // Redraw this thumbnail
+                    const newScale = Math.min(60 / sel.canvas.width, 60 / sel.canvas.height);
+                    const newW = sel.canvas.width * newScale;
+                    const newH = sel.canvas.height * newScale;
+                    ctx.clearRect(0, 0, 60, 60);
+                    ctx.drawImage(sel.canvas, (60 - newW) / 2, (60 - newH) / 2, newW, newH);
+                });
+
+                canvasContainer.appendChild(canvas);
+                canvasContainer.appendChild(rotateBtn);
+
                 const name = document.createElement('div');
                 name.className = 'picker-item-name';
                 name.textContent = sel.name;
 
-                item.appendChild(canvas);
+                item.appendChild(canvasContainer);
                 item.appendChild(name);
 
-                item.addEventListener('click', () => {
+                item.addEventListener('click', (e) => {
+                    // Don't assign if clicking rotate button
+                    if (e.target.classList.contains('picker-rotate-btn')) return;
                     this.template.setAssignment(section.id, sel);
                     this.updateAssignmentPanel();
                     this.closePicker();
@@ -451,7 +474,8 @@ class FortuneTellerApp {
             imageId: imageData.id,
             imageName: imageData.name,
             selection: scaledSelection,
-            canvas: extractedCanvas
+            canvas: extractedCanvas,
+            rotation: 0  // User rotation in degrees
         };
 
         this.selections.push(selectionData);
@@ -496,9 +520,19 @@ class FortuneTellerApp {
         nameSpan.textContent = selectionData.name;
         info.appendChild(nameSpan);
 
-        // Actions (delete button on hover)
+        // Actions (rotate and delete buttons on hover)
         const actions = document.createElement('div');
         actions.className = 'selection-actions';
+
+        const rotateBtn = document.createElement('button');
+        rotateBtn.className = 'btn btn-secondary rotate-btn';
+        rotateBtn.textContent = '↻';
+        rotateBtn.title = 'Rotate 90°';
+        rotateBtn.addEventListener('click', (e) => {
+            e.stopPropagation();
+            e.preventDefault();
+            this.rotateSelection(selectionData.id, 90);
+        });
 
         const deleteBtn = document.createElement('button');
         deleteBtn.className = 'btn btn-danger';
@@ -510,6 +544,7 @@ class FortuneTellerApp {
             this.deleteSelection(selectionData.id);
         });
 
+        actions.appendChild(rotateBtn);
         actions.appendChild(deleteBtn);
 
         item.appendChild(preview);
@@ -538,6 +573,72 @@ class FortuneTellerApp {
         }
 
         this.updateAssignmentPanel();
+    }
+
+    rotateSelection(selectionId, degrees) {
+        const selection = this.selections.find(s => s.id === selectionId);
+        if (!selection) return;
+
+        // Update rotation (normalize to 0-359)
+        selection.rotation = (selection.rotation + degrees) % 360;
+        if (selection.rotation < 0) selection.rotation += 360;
+
+        // Rotate the canvas
+        const oldCanvas = selection.canvas;
+        const newCanvas = document.createElement('canvas');
+        const ctx = newCanvas.getContext('2d');
+
+        // For 90 or 270 degree rotations, swap dimensions
+        const isOrthogonal = degrees === 90 || degrees === 270 || degrees === -90 || degrees === -270;
+        if (isOrthogonal) {
+            newCanvas.width = oldCanvas.height;
+            newCanvas.height = oldCanvas.width;
+        } else {
+            newCanvas.width = oldCanvas.width;
+            newCanvas.height = oldCanvas.height;
+        }
+
+        // Rotate around center
+        ctx.translate(newCanvas.width / 2, newCanvas.height / 2);
+        ctx.rotate((degrees * Math.PI) / 180);
+        ctx.drawImage(oldCanvas, -oldCanvas.width / 2, -oldCanvas.height / 2);
+
+        selection.canvas = newCanvas;
+
+        // Update the thumbnail in the selections list
+        this.updateSelectionThumbnail(selectionId);
+
+        // Re-render template if this selection is assigned
+        this.template.render();
+        this.updateAssignmentPanel();
+    }
+
+    updateSelectionThumbnail(selectionId) {
+        const selection = this.selections.find(s => s.id === selectionId);
+        if (!selection) return;
+
+        const item = document.querySelector(`.selection-item[data-selection-id="${selectionId}"]`);
+        if (!item) return;
+
+        const preview = item.querySelector('.selection-preview');
+        if (!preview) return;
+
+        // Create new thumbnail canvas
+        const thumbCanvas = document.createElement('canvas');
+        thumbCanvas.width = 70;
+        thumbCanvas.height = 70;
+        const ctx = thumbCanvas.getContext('2d');
+
+        // Draw the rotated selection scaled to fit
+        const src = selection.canvas;
+        const scale = Math.min(70 / src.width, 70 / src.height);
+        const w = src.width * scale;
+        const h = src.height * scale;
+        ctx.drawImage(src, (70 - w) / 2, (70 - h) / 2, w, h);
+
+        // Replace old canvas
+        preview.innerHTML = '';
+        preview.appendChild(thumbCanvas);
     }
 
     updateButtonStates() {
@@ -616,6 +717,17 @@ class FortuneTellerApp {
             ctx.drawImage(src, (50 - w) / 2, (50 - h) / 2, w, h);
 
             thumbContainer.appendChild(canvas);
+
+            // Add rotate button for assigned slots
+            const rotateBtn = document.createElement('button');
+            rotateBtn.className = 'slot-rotate-btn';
+            rotateBtn.textContent = '↻';
+            rotateBtn.title = 'Rotate 90°';
+            rotateBtn.addEventListener('click', (e) => {
+                e.stopPropagation();
+                this.rotateSelection(currentAssignment.id, 90);
+            });
+            thumbContainer.appendChild(rotateBtn);
         } else {
             thumbContainer.classList.add('empty');
         }
@@ -624,7 +736,11 @@ class FortuneTellerApp {
         slot.appendChild(thumbContainer);
 
         // Click to open picker
-        slot.addEventListener('click', () => this.openPicker(section));
+        slot.addEventListener('click', (e) => {
+            // Don't open picker if clicking rotate button
+            if (e.target.classList.contains('slot-rotate-btn')) return;
+            this.openPicker(section);
+        });
 
         // Drop target
         slot.addEventListener('dragover', (e) => {
@@ -913,7 +1029,8 @@ class FortuneTellerApp {
             imageId: imageData.id,
             imageName: imageData.name,
             selection: selection,
-            canvas: extractedCanvas
+            canvas: extractedCanvas,
+            rotation: 0  // User rotation in degrees
         };
 
         this.selections.push(selectionData);
