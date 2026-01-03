@@ -605,10 +605,18 @@ class FortuneTellerApp {
 
         selection.canvas = newCanvas;
 
+        // Update any template assignments that use this selection
+        for (const sectionId in this.template.assignments) {
+            if (this.template.assignments[sectionId].id === selectionId) {
+                // Re-assign to ensure the template has the updated canvas reference
+                this.template.assignments[sectionId] = selection;
+            }
+        }
+
         // Update the thumbnail in the selections list
         this.updateSelectionThumbnail(selectionId);
 
-        // Re-render template if this selection is assigned
+        // Re-render template
         this.template.render();
         this.updateAssignmentPanel();
     }
